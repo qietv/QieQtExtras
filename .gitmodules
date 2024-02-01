@@ -1,3 +1,6 @@
 [submodule "QWindowKit"]
 	path = QWindowKit
 	url = https://github.com/stdware/qwindowkit
+[submodule "QHotkey"]
+	path = QHotkey
+	url = https://github.com/Skycoder42/QHotkey
