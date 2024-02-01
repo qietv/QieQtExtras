@@ -22,11 +22,11 @@ rd /s /q %BinaryFolder%
 
 mkdir %BinaryFolder%
 
-set CommonOptions=-DCMAKE_PREFIX_PATH=%QtBinaryFolder% -DCMAKE_INSTALL_PREFIX=%BinaryFolder% -G "Ninja" -DQWINDOWKIT_BUILD_STATIC=ON
+set CommonOptions=-DCMAKE_PREFIX_PATH=%QtBinaryFolder% -DCMAKE_INSTALL_PREFIX=%BinaryFolder% -G "Ninja"
 
 mkdir %ObjectFolder%\QWindowKit_debug
 pushd %ObjectFolder%\QWindowKit_debug
-cmake %CommonOptions% -DCMAKE_BUILD_TYPE=Debug ../../../../QWindowKit
+cmake %CommonOptions% -DCMAKE_BUILD_TYPE=Debug ../../../../QWindowKit -DQWINDOWKIT_BUILD_STATIC=ON
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 cmake --build . --parallel
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
@@ -36,12 +36,36 @@ popd
 
 mkdir %ObjectFolder%\QWindowKit_release
 pushd %ObjectFolder%\QWindowKit_release
-cmake %CommonOptions% -DCMAKE_BUILD_TYPE=Release ../../../../QWindowKit
+cmake %CommonOptions% -DCMAKE_BUILD_TYPE=Release ../../../../QWindowKit -DQWINDOWKIT_BUILD_STATIC=ON
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 cmake --build . --parallel
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 ninja install
 if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
 popd
+
+mkdir %ObjectFolder%\QHotkey_debug
+pushd %ObjectFolder%\QHotkey_debug
+cmake %CommonOptions% -DCMAKE_BUILD_TYPE=Debug ../../../../QHotkey -DQT_DEFAULT_MAJOR_VERSION=6
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+cmake --build . --parallel
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+ninja install
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+popd
+
+rename %BinaryFolder%\lib\qhotkey.lib QHotkeyd.lib
+
+mkdir %ObjectFolder%\QHotkey_release
+pushd %ObjectFolder%\QHotkey_release
+cmake %CommonOptions% -DCMAKE_BUILD_TYPE=Release ../../../../QHotkey -DQT_DEFAULT_MAJOR_VERSION=6
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+cmake --build . --parallel
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+ninja install
+if %ERRORLEVEL% NEQ 0 exit /B %ERRORLEVEL%
+popd
+
+rename %BinaryFolder%\lib\qhotkey.lib QHotkey.lib
 
 @endlocal
